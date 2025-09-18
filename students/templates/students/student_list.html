@@ -1,0 +1,124 @@
+{% extends 'students/base.html' %}
+
+{% block title %}All Students - Student Management System{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">
+                    <i class="fas fa-users me-2"></i>Students List
+                    {% if students.count %}
+                        <span class="badge bg-primary ms-2">{{ students.count }}</span>
+                    {% endif %}
+                </h5>
+                <a href="{% url 'student-add' %}" class="btn btn-success">
+                    <i class="fas fa-plus me-1"></i>Add New Student
+                </a>
+            </div>
+            
+            <div class="card-body">
+                <!-- Search Form -->
+                <form method="get" class="mb-4">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="input-group">
+                                <input 
+                                    type="text" 
+                                    class="form-control search-box" 
+                                    name="search" 
+                                    value="{{ search_query }}"
+                                    placeholder="Search by name or roll number..."
+                                >
+                                <button class="btn btn-outline-primary search-btn" type="submit">
+                                    <i class="fas fa-search"></i>
+                                </button>
+                            </div>
+                        </div>
+                        {% if search_query %}
+                        <div class="col-md-6">
+                            <a href="{% url 'student-list' %}" class="btn btn-outline-secondary">
+                                <i class="fas fa-times me-1"></i>Clear Search
+                            </a>
+                        </div>
+                        {% endif %}
+                    </div>
+                </form>
+
+                {% if search_query and not students %}
+                    <div class="alert alert-info">
+                        <i class="fas fa-info-circle me-2"></i>
+                        No students found for "{{ search_query }}".
+                    </div>
+                {% elif not students %}
+                    <div class="alert alert-info text-center">
+                        <i class="fas fa-user-graduate fa-3x mb-3"></i>
+                        <h5>No students registered yet</h5>
+                        <p>Start by adding your first student.</p>
+                        <a href="{% url 'student-add' %}" class="btn btn-primary">
+                            <i class="fas fa-plus me-1"></i>Add First Student
+                        </a>
+                    </div>
+                {% else %}
+                    <!-- Students Table -->
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Roll Number</th>
+                                    <th>Name</th>
+                                    <th>Email</th>
+                                    <th>Marks</th>
+                                    <th>Registered</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for student in students %}
+                                <tr>
+                                    <td>
+                                        <strong>{{ student.roll_number }}</strong>
+                                    </td>
+                                    <td>
+                                        <a href="{% url 'student-detail' student.pk %}" class="text-decoration-none">
+                                            {{ student.name }}
+                                        </a>
+                                    </td>
+                                    <td>{{ student.email }}</td>
+                                    <td>
+                                        <span class="badge {% if student.marks >= 80 %}bg-success{% elif student.marks >= 60 %}bg-warning{% else %}bg-danger{% endif %}">
+                                            {{ student.marks }}%
+                                        </span>
+                                    </td>
+                                    <td>{{ student.created_at|date:"M d, Y" }}</td>
+                                    <td>
+                                        <div class="btn-group" role="group">
+                                            <a href="{% url 'student-detail' student.pk %}" 
+                                               class="btn btn-sm btn-outline-info"
+                                               title="View Details">
+                                                <i class="fas fa-eye"></i>
+                                            </a>
+                                            <a href="{% url 'student-edit' student.pk %}" 
+                                               class="btn btn-sm btn-outline-primary"
+                                               title="Edit">
+                                                <i class="fas fa-edit"></i>
+                                            </a>
+                                            <a href="{% url 'student-delete' student.pk %}" 
+                                               class="btn btn-sm btn-outline-danger"
+                                               title="Delete">
+                                                <i class="fas fa-trash"></i>
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

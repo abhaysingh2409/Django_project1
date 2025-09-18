@@ -1,0 +1,87 @@
+{% extends 'students/base.html' %}
+
+{% block title %}Delete {{ student.name }} - Student Management System{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card border-danger">
+            <div class="card-header bg-danger text-white">
+                <h5 class="mb-0">
+                    <i class="fas fa-exclamation-triangle me-2"></i>Confirm Deletion
+                </h5>
+            </div>
+            <div class="card-body">
+                <div class="alert alert-warning">
+                    <i class="fas fa-info-circle me-2"></i>
+                    <strong>Warning:</strong> This action cannot be undone.
+                </div>
+
+                <h6 class="mb-3">Are you sure you want to delete the following student?</h6>
+                
+                <!-- Student Information -->
+                <div class="card bg-light">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-sm-4">
+                                <strong>Name:</strong>
+                            </div>
+                            <div class="col-sm-8">
+                                {{ student.name }}
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-4">
+                                <strong>Roll Number:</strong>
+                            </div>
+                            <div class="col-sm-8">
+                                {{ student.roll_number }}
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-4">
+                                <strong>Email:</strong>
+                            </div>
+                            <div class="col-sm-8">
+                                {{ student.email }}
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-4">
+                                <strong>Marks:</strong>
+                            </div>
+                            <div class="col-sm-8">
+                                <span class="badge {% if student.marks >= 80 %}bg-success{% elif student.marks >= 60 %}bg-warning{% else %}bg-danger{% endif %}">
+                                    {{ student.marks }}%
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <form method="post" class="mt-4">
+                    {% csrf_token %}
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                        <a href="{% url 'student-detail' student.pk %}" class="btn btn-secondary me-md-2">
+                            <i class="fas fa-times me-1"></i>Cancel
+                        </a>
+                        <a href="{% url 'student-list' %}" class="btn btn-outline-secondary me-md-2">
+                            <i class="fas fa-arrow-left me-1"></i>Back to List
+                        </a>
+                        <button type="submit" class="btn btn-danger">
+                            <i class="fas fa-trash me-1"></i>Yes, Delete Student
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // Auto-focus on the delete button for keyboard users
+    document.querySelector('button[type="submit"]').focus();
+</script>
+{% endblock %}

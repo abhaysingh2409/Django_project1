@@ -1,0 +1,150 @@
+{% extends 'students/base.html' %}
+
+{% block title %}{{ student.name }} - Student Details{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">
+                    <i class="fas fa-user-graduate me-2"></i>Student Details
+                </h5>
+                <div class="btn-group" role="group">
+                    <a href="{% url 'student-edit' student.pk %}" class="btn btn-primary btn-sm">
+                        <i class="fas fa-edit me-1"></i>Edit
+                    </a>
+                    <a href="{% url 'student-delete' student.pk %}" class="btn btn-danger btn-sm">
+                        <i class="fas fa-trash me-1"></i>Delete
+                    </a>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6 class="text-muted mb-1">Full Name</h6>
+                        <h4 class="mb-3">{{ student.name }}</h4>
+                    </div>
+                    <div class="col-md-6">
+                        <h6 class="text-muted mb-1">Roll Number</h6>
+                        <h4 class="mb-3">
+                            <span class="badge bg-secondary">{{ student.roll_number }}</span>
+                        </h4>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6 class="text-muted mb-1">Email Address</h6>
+                        <p class="mb-3">
+                            <a href="mailto:{{ student.email }}" class="text-decoration-none">
+                                <i class="fas fa-envelope me-1"></i>{{ student.email }}
+                            </a>
+                        </p>
+                    </div>
+                    <div class="col-md-6">
+                        <h6 class="text-muted mb-1">Marks</h6>
+                        <p class="mb-3">
+                            <span class="badge fs-6 {% if student.marks >= 80 %}bg-success{% elif student.marks >= 60 %}bg-warning{% else %}bg-danger{% endif %}">
+                                {{ student.marks }}%
+                            </span>
+                        </p>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <h6 class="text-muted mb-1">Registration Date</h6>
+                        <p class="mb-3">
+                            <i class="fas fa-calendar me-1"></i>{{ student.created_at|date:"F d, Y" }}
+                        </p>
+                    </div>
+                    <div class="col-md-6">
+                        <h6 class="text-muted mb-1">Last Updated</h6>
+                        <p class="mb-3">
+                            <i class="fas fa-clock me-1"></i>{{ student.updated_at|date:"F d, Y g:i A" }}
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Performance Badge -->
+                <div class="row">
+                    <div class="col-12">
+                        <h6 class="text-muted mb-2">Performance Grade</h6>
+                        {% if student.marks >= 90 %}
+                            <span class="badge bg-success fs-6">
+                                <i class="fas fa-star me-1"></i>Excellent (A+)
+                            </span>
+                        {% elif student.marks >= 80 %}
+                            <span class="badge bg-success fs-6">
+                                <i class="fas fa-thumbs-up me-1"></i>Good (A)
+                            </span>
+                        {% elif student.marks >= 70 %}
+                            <span class="badge bg-info fs-6">
+                                <i class="fas fa-check me-1"></i>Satisfactory (B)
+                            </span>
+                        {% elif student.marks >= 60 %}
+                            <span class="badge bg-warning fs-6">
+                                <i class="fas fa-exclamation me-1"></i>Needs Improvement (C)
+                            </span>
+                        {% else %}
+                            <span class="badge bg-danger fs-6">
+                                <i class="fas fa-times me-1"></i>Poor (F)
+                            </span>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <!-- Quick Actions -->
+        <div class="card">
+            <div class="card-header">
+                <h6 class="mb-0">Quick Actions</h6>
+            </div>
+            <div class="card-body">
+                <div class="d-grid gap-2">
+                    <a href="{% url 'student-edit' student.pk %}" class="btn btn-outline-primary">
+                        <i class="fas fa-edit me-2"></i>Edit Student
+                    </a>
+                    <a href="{% url 'student-list' %}" class="btn btn-outline-secondary">
+                        <i class="fas fa-arrow-left me-2"></i>Back to List
+                    </a>
+                    <a href="{% url 'student-add' %}" class="btn btn-outline-success">
+                        <i class="fas fa-plus me-2"></i>Add New Student
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Student Stats -->
+        <div class="card mt-3">
+            <div class="card-header">
+                <h6 class="mb-0">Statistics</h6>
+            </div>
+            <div class="card-body">
+                <div class="text-center">
+                    <div class="mb-3">
+                        <i class="fas fa-chart-line fa-2x text-primary"></i>
+                    </div>
+                    <h5>{{ student.marks }}%</h5>
+                    <p class="text-muted mb-2">Current Marks</p>
+                    
+                    <div class="progress">
+                        <div class="progress-bar {% if student.marks >= 80 %}bg-success{% elif student.marks >= 60 %}bg-warning{% else %}bg-danger{% endif %}" 
+                             role="progressbar" 
+                             style="width: {{ student.marks }}%" 
+                             aria-valuenow="{{ student.marks }}" 
+                             aria-valuemin="0" 
+                             aria-valuemax="100">
+                        </div>
+                    </div>
+                    <small class="text-muted">Performance Progress</small>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
